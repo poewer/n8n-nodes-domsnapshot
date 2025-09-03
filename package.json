@@ -1,7 +1,7 @@
 {
   "name": "n8n-nodes-domsnapshot",
   "version": "0.1.0",
-  "description": "",
+  "description": "DOM Snapshot node for n8n using Playwright",
   "keywords": [
     "n8n-community-node-package"
   ],
