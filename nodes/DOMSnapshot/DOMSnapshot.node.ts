@@ -8,14 +8,14 @@ import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 
 export class DOMSnapshot implements INodeType {
     description: INodeTypeDescription = {
-        displayName: 'DOM Snapshot',
+        displayName: 'Dom Snapshot',
         name: 'domSnapshot',
         icon: { light: 'file:dss.svg', dark: 'file:dss.svg' },
         group: ['transform'],
         version: 1,
         description: 'Open a URL with Playwright, wait for load, and return HTML',
         defaults: {
-            name: 'DOM Snapshot',
+            name: 'Dom Snapshot',
         },
         inputs: [NodeConnectionType.Main],
         outputs: [NodeConnectionType.Main],
@@ -43,7 +43,7 @@ export class DOMSnapshot implements INodeType {
                 ],
             },
             {
-                displayName: 'Timeout (ms)',
+                displayName: 'Timeout (Ms)',
                 name: 'timeout',
                 type: 'number',
                 default: 30000,

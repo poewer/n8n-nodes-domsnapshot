@@ -34,7 +34,7 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "nodes": [
-      "dist/nodes/DOMSnapshot/DOMSnapshot.node.js"
+      "dist/nodes/DOMSnapshot/DomSnapshot.node.js"
     ]
   },
   "devDependencies": {
