@@ -1,48 +1,89 @@
 ![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
 
-# n8n-nodes-starter
+# 🕸️ DOM Snapshot Node
 
-This repo contains example nodes to help you get started building your own custom integrations for [n8n](https://n8n.io). It includes the node linter and other dependencies.
+**DOM Snapshot** to niestandardowy węzeł dla [n8n](https://n8n.io/), który umożliwia pobranie pełnego kodu HTML strony internetowej za pomocą biblioteki [Playwright](https://playwright.dev/).  
+Node otwiera podany adres URL w przeglądarce Chromium w trybie headless, czeka na wskazany moment załadowania strony, a następnie zwraca zrzut DOM w formacie HTML.
 
-To make your custom node available to the community, you must create it as an npm package, and [submit it to the npm registry](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry).
+---
 
-If you would like your node to be available on n8n cloud you can also [submit your node for verification](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/).
+## ✨ Funkcjonalności
 
-## Prerequisites
+- Otwiera stronę w Playwright Chromium.  
+- Czeka na wybrane zdarzenie załadowania strony:
+  - **Load** – pełne załadowanie strony.  
+  - **DOM Content Loaded** – załadowanie drzewa DOM.  
+  - **Network Idle** – brak aktywnych połączeń sieciowych.  
+- Zwraca zawartość strony (`<html>...</html>`) w polu `data` w JSON.  
+- Obsługuje parametr timeout (maksymalny czas oczekiwania).  
+- Może działać jako node typu `transform` lub jako narzędzie (usable as tool).  
 
-You need the following installed on your development machine:
+---
 
-* [git](https://git-scm.com/downloads)
-* Node.js and npm. Minimum version Node 20. You can find instructions on how to install both using nvm (Node Version Manager) for Linux, Mac, and WSL [here](https://github.com/nvm-sh/nvm). For Windows users, refer to Microsoft's guide to [Install NodeJS on Windows](https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows).
-* Install n8n with:
+## ⚙️ Parametry
+
+| Nazwa              | Typ       | Domyślna wartość | Opis                                                                 |
+|---------------------|-----------|------------------|----------------------------------------------------------------------|
+| **URL**            | string    | –                | Adres strony, którą chcesz pobrać. Wymagane.                        |
+| **Wait Until**     | options   | `networkidle`    | Moment, w którym uznać stronę za załadowaną (`load`, `domcontentloaded`, `networkidle`). |
+| **Timeout (ms)**   | number    | `30000`          | Maksymalny czas (w milisekundach) oczekiwania na załadowanie strony. |
+
+---
+
+## 📦 Instalacja
+### 🔹 Przez interfejs GUI n8n
+1. Wejdź w ustawienia **Community Nodes** w n8n.  
+2. Kliknij **Install** i podaj nazwę repozytorium: n8n-nodes-domsnapshot
+3. n8n automatycznie pobierze i zainstaluje paczkę wraz z wymaganymi zależnościami.  
+4. Po restarcie n8n node **DOM Snapshot** będzie dostępny w edytorze workflow.
+
+### Manualna
+1. Sklonuj repozytorium lub skopiuj kod node’a do swojego katalogu **community nodes** w n8n.  
+    ```bash
+    git clone https://github.com/poewer/n8n-nodes-domsnapshot
+    ```
+2. W katalogu node’a uruchom:
+    ```bash
+    npm install
+    ```
+3. playwright zostanie zainstalowany automatycznie,
+
+4. a dzięki postinstall zostanie również pobrane Chromium (npx playwright install chromium).
+
+5. Zbuduj node:
+    ```bash
+    npm run build
+    ```
+
+
+6. Uruchom n8n z włączoną obsługą community nodes i dodaj DOM Snapshot do swojego workflow.
+
+
+## 🚀 Przykład użycia
+
+1. Dodaj node DOM Snapshot w workflow.
+
+2. Podaj adres URL, np. https://example.com.
+
+3. Ustaw tryb oczekiwania, np. Network Idle.
+
+4. Uruchom workflow.
+
+### Przykładowy output w polu json.data:
+  ``` json
+  {
+    "data": "<!DOCTYPE html><html><head>...</head><body>...</body></html>"
+  }
   ```
-  npm install n8n -g
-  ```
-* Recommended: follow n8n's guide to [set up your development environment](https://docs.n8n.io/integrations/creating-nodes/build/node-development-environment/).
 
-## Using this starter
+## 🛠️ Obsługa błędów
 
-These are the basic steps for working with the starter. For detailed guidance on creating and publishing nodes, refer to the [documentation](https://docs.n8n.io/integrations/creating-nodes/).
+- Brak wartości w polu URL powoduje błąd.
 
-1. [Generate a new repository](https://github.com/n8n-io/n8n-nodes-starter/generate) from this template repository.
-2. Clone your new repo:
-   ```
-   git clone https://github.com/<your organization>/<your-repo-name>.git
-   ```
-3. Run `npm i` to install dependencies.
-4. Open the project in your editor.
-5. Browse the examples in `/nodes` and `/credentials`. Modify the examples, or replace them with your own nodes.
-6. Update the `package.json` to match your details.
-7. Run `npm run lint` to check for errors or `npm run lintfix` to automatically fix errors when possible.
-8. Test your node locally. Refer to [Run your node locally](https://docs.n8n.io/integrations/creating-nodes/test/run-node-locally/) for guidance.
-9. Replace this README with documentation for your node. Use the [README_TEMPLATE](README_TEMPLATE.md) to get started.
-10. Update the LICENSE file to use your details.
-11. [Publish](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry) your package to npm.
+- Jeśli strona nie załaduje się w zadanym czasie, zwrócony zostanie błąd.
 
-## More information
+- Jeśli w n8n włączona jest opcja Continue On Fail, błąd zostanie przypisany do danego elementu (itemIndex), a workflow będzie kontynuowany.
 
-Refer to our [documentation on creating nodes](https://docs.n8n.io/integrations/creating-nodes/) for detailed information on building your own nodes.
+## Licencja
 
-## License
-
-[MIT](https://github.com/n8n-io/n8n-nodes-starter/blob/master/LICENSE.md)
+[MIT]()
