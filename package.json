@@ -33,7 +33,6 @@
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
-    "credentials": [],
     "nodes": [
       "dist/nodes/DOMSnapshot/DOMSnapshot.node.js"
     ]
